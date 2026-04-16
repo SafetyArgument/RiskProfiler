@@ -411,7 +411,7 @@ export default function App() {
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 bg-foreground flex items-center justify-center rounded-lg transition-colors duration-300">
             <img 
-              src={darkMode ? "/Logo_bw.jpg" : "/Logo_wb.jpg"} 
+              src={darkMode ? "/RiskProfiler/Logo_bw.jpg" : "/RiskProfiler/Logo_wb.jpg"} 
               alt="Logo" 
               className="w-8 h-8 object-contain"
             />
@@ -573,7 +573,7 @@ export default function App() {
             <div className="h-full flex flex-col items-center justify-center text-center p-24 border border-dashed border-border rounded-lg bg-secondary/30 transition-colors duration-300">
               <div className="w-24 h-24 mb-8 opacity-40">
                 <img 
-                  src={darkMode ? "/Logo_bw.jpg" : "/Logo_wb.jpg"} 
+                  src={darkMode ? "/RiskProfiler/Logo_bw.jpg" : "/RiskProfiler/Logo_wb.jpg"} 
                   alt="Logo" 
                   className="w-full h-full object-contain"
                 />
