@@ -571,11 +571,11 @@ export default function App() {
         <section className="space-y-8 min-h-[80vh]">
           {results.length === 0 && !isSearching && (
             <div className="h-full flex flex-col items-center justify-center text-center p-24 border border-dashed border-border rounded-lg bg-background transition-colors duration-300">
-              <div className="w-24 h-24 mb-8 opacity-80">
+              <div className="w-24 h-24 bg-background flex items-center justify-center rounded-2xl border border-border mb-8 shadow-sm transition-colors duration-300">
                 <img 
                   src={darkMode ? `${import.meta.env.BASE_URL}Logo_bw.jpg` : `${import.meta.env.BASE_URL}Logo_wb.jpg`} 
                   alt="Logo" 
-                  className="w-full h-full object-contain"
+                  className="w-16 h-16 object-contain"
                 />
               </div>
               <h3 className="font-sans font-bold uppercase tracking-[0.2em] text-2xl opacity-30">Safety Argument</h3>
