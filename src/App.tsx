@@ -409,9 +409,9 @@ export default function App() {
       {/* Header */}
       <header className="border-b border-border p-6 flex justify-between items-center bg-background/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-foreground flex items-center justify-center rounded-lg transition-colors duration-300">
+          <div className="w-10 h-10 bg-background flex items-center justify-center rounded-lg transition-colors duration-300 border border-border">
             <img 
-              src={darkMode ? "/RiskProfiler/Logo_bw.jpg" : "/RiskProfiler/Logo_wb.jpg"} 
+              src={darkMode ? `${import.meta.env.BASE_URL}Logo_bw.jpg` : `${import.meta.env.BASE_URL}Logo_wb.jpg`} 
               alt="Logo" 
               className="w-8 h-8 object-contain"
             />
@@ -499,7 +499,7 @@ export default function App() {
                     value={params.title}
                     onChange={(e) => setParams({ ...params, title: e.target.value })}
                     placeholder="e.g. Smart City Infrastructure"
-                    className="w-full bg-secondary border border-border p-4 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:opacity-30 text-foreground"
+                    className="w-full bg-secondary border border-border p-4 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all text-foreground"
                     disabled={isSearching}
                   />
                 </div>
@@ -510,7 +510,7 @@ export default function App() {
                     value={params.jurisdiction}
                     onChange={(e) => setParams({ ...params, jurisdiction: e.target.value })}
                     placeholder="e.g. European Union"
-                    className="w-full bg-secondary border border-border p-4 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:opacity-30 text-foreground"
+                    className="w-full bg-secondary border border-border p-4 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all text-foreground"
                     disabled={isSearching}
                   />
                 </div>
@@ -521,7 +521,7 @@ export default function App() {
                     value={params.application}
                     onChange={(e) => setParams({ ...params, application: e.target.value })}
                     placeholder="e.g. Autonomous Delivery Drones"
-                    className="w-full bg-secondary border border-border p-4 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:opacity-30 text-foreground"
+                    className="w-full bg-secondary border border-border p-4 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all text-foreground"
                     disabled={isSearching}
                   />
                 </div>
@@ -531,7 +531,7 @@ export default function App() {
                     value={params.context}
                     onChange={(e) => setParams({ ...params, context: e.target.value })}
                     placeholder="e.g. Urban residential areas with high pedestrian density"
-                    className="w-full bg-secondary border border-border p-4 text-sm min-h-[150px] rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:opacity-30 text-foreground"
+                    className="w-full bg-secondary border border-border p-4 text-sm min-h-[150px] rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all text-foreground resize-none"
                     disabled={isSearching}
                   />
                 </div>
@@ -570,10 +570,10 @@ export default function App() {
         {/* Main Content: Results */}
         <section className="space-y-8 min-h-[80vh]">
           {results.length === 0 && !isSearching && (
-            <div className="h-full flex flex-col items-center justify-center text-center p-24 border border-dashed border-border rounded-lg bg-secondary/30 transition-colors duration-300">
-              <div className="w-24 h-24 mb-8 opacity-40">
+            <div className="h-full flex flex-col items-center justify-center text-center p-24 border border-dashed border-border rounded-lg bg-background transition-colors duration-300">
+              <div className="w-24 h-24 mb-8 opacity-80">
                 <img 
-                  src={darkMode ? "/RiskProfiler/Logo_bw.jpg" : "/RiskProfiler/Logo_wb.jpg"} 
+                  src={darkMode ? `${import.meta.env.BASE_URL}Logo_bw.jpg` : `${import.meta.env.BASE_URL}Logo_wb.jpg`} 
                   alt="Logo" 
                   className="w-full h-full object-contain"
                 />

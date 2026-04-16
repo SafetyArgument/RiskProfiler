@@ -48,6 +48,10 @@
   button, input, textarea, select {
     @apply font-sans rounded-lg text-foreground;
   }
+
+  input::placeholder, textarea::placeholder {
+    @apply text-foreground opacity-30;
+  }
 }
 
 .prose h1, .prose h2, .prose h3 {
