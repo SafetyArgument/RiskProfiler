@@ -13,7 +13,8 @@ import {
   Info,
   Printer,
   Download,
-  ShieldCheck
+  Sun,
+  Moon
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -33,12 +34,23 @@ const STEPS = [
 ];
 
 export default function App() {
+  const [darkMode, setDarkMode] = useState(true); // Default to dark
   const [params, setParams] = useState<ResearchParams>({
     title: "",
     jurisdiction: "",
     application: "",
     context: "",
   });
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
+  const toggleDarkMode = () => setDarkMode(!darkMode);
   const [isSearching, setIsSearching] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [results, setResults] = useState<StepResult[]>([]);
@@ -393,26 +405,38 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#E4E3E0] text-[#141414] font-sans selection:bg-[#141414] selection:text-[#E4E3E0]">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-foreground selection:text-background transition-colors duration-300">
       {/* Header */}
-      <header className="border-b border-[#141414] p-6 flex justify-between items-center bg-white/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#141414] flex items-center justify-center rounded-sm">
-            <ShieldCheck className="text-[#E4E3E0] w-6 h-6" />
+      <header className="border-b border-border p-6 flex justify-between items-center bg-background/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-foreground flex items-center justify-center rounded-lg transition-colors duration-300">
+            <img 
+              src={darkMode ? "/Logo_bw.jpg" : "/Logo_wb.jpg"} 
+              alt="Logo" 
+              className="w-8 h-8 object-contain"
+            />
           </div>
           <div>
-            <h1 className="font-serif italic text-xl tracking-tight leading-none">Safety Argument</h1>
-            <p className="text-[10px] uppercase tracking-widest opacity-50 mt-1">Basic Research Risk Profiler</p>
+            <h1 className="font-sans font-extrabold text-xl tracking-tight leading-none uppercase">Safety Argument</h1>
+            <p className="text-[10px] uppercase tracking-widest opacity-50 mt-1 font-mono">Basic Research Risk Profiler</p>
           </div>
         </div>
         
         <div className="flex items-center gap-4">
+          <button 
+            onClick={toggleDarkMode} 
+            className="p-2 rounded-full hover:bg-secondary transition-colors duration-300 mr-2"
+            aria-label="Toggle Dark Mode"
+          >
+            {darkMode ? <Sun className="w-5 h-5 text-accent" /> : <Moon className="w-5 h-5 text-accent" />}
+          </button>
+
           {results.length > 0 && (
             <div className="flex gap-2">
               <button
                 onClick={handleExportPDF}
                 disabled={isExporting}
-                className="flex items-center gap-2 px-4 py-2 bg-[#141414] text-[#E4E3E0] rounded-sm text-xs font-mono uppercase tracking-widest hover:bg-[#2a2a2a] transition-all disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 bg-foreground text-background rounded-lg text-xs font-mono uppercase tracking-widest hover:opacity-90 transition-all disabled:opacity-50"
               >
                 {isExporting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Printer className="w-3 h-3" />}
                 <span>Export PDF</span>
@@ -420,7 +444,7 @@ export default function App() {
               <button
                 onClick={handleExportWord}
                 disabled={isExportingXLS}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-[#141414] text-[#141414] rounded-sm text-xs font-mono uppercase tracking-widest hover:bg-[#f5f5f3] transition-all disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 bg-background border border-border text-foreground rounded-lg text-xs font-mono uppercase tracking-widest hover:bg-secondary transition-all disabled:opacity-50"
               >
                 {isExportingXLS ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
                 <span>Export Word</span>
@@ -428,7 +452,7 @@ export default function App() {
             </div>
           )}
           {isSearching && (
-            <div className="flex items-center gap-2 px-3 py-1 bg-[#141414] text-[#E4E3E0] rounded-full text-xs font-mono animate-pulse">
+            <div className="flex items-center gap-2 px-3 py-1 bg-foreground text-background rounded-full text-xs font-mono animate-pulse">
               <Loader2 className="w-3 h-3 animate-spin" />
               <span>Step {currentStep}/4</span>
             </div>
@@ -438,7 +462,7 @@ export default function App() {
 
       <main className="max-w-7xl mx-auto p-6 space-y-8">
         {/* Horizontal Progress Bar */}
-        <div className="flex gap-2 h-1.5 w-full max-w-4xl mx-auto">
+        <div className="flex gap-2 h-1 w-full max-w-4xl mx-auto">
           {[1, 2, 3, 4].map((stepId) => {
             const isCompleted = results.some((r) => r.step === stepId);
             const isActive = currentStep === stepId;
@@ -446,8 +470,8 @@ export default function App() {
               <div 
                 key={stepId}
                 className={cn(
-                  "flex-1 rounded-full transition-all duration-500",
-                  isCompleted ? "bg-green-500" : isActive ? "bg-[#141414] animate-pulse" : "bg-[#141414]/10"
+                  "flex-1 rounded-lg transition-all duration-500",
+                  isCompleted ? "bg-foreground" : isActive ? "bg-foreground animate-pulse" : "bg-border"
                 )}
               />
             );
@@ -457,63 +481,63 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-8 items-start">
           {/* Sidebar: Form */}
           <aside className="space-y-8 lg:sticky lg:top-24">
-            <section className="bg-white border border-[#141414] p-6 shadow-[4px_4px_0px_#141414]">
-              <div className="flex items-center gap-2 mb-6 border-b border-[#141414] pb-2 group relative">
-                <h2 className="font-serif italic text-lg">Research Parameters</h2>
+            <section className="bg-background border border-border p-8 rounded-lg">
+              <div className="flex items-center gap-2 mb-8 border-b border-border pb-4 group relative">
+                <h2 className="font-sans font-bold uppercase tracking-widest text-sm">Research Parameters</h2>
                 <div className="relative group">
                   <Info className="w-4 h-4 opacity-40 cursor-help hover:opacity-100 transition-opacity" />
-                  <div className="absolute left-full ml-2 top-0 w-64 p-3 bg-[#141414] text-[#E4E3E0] text-[10px] leading-relaxed rounded-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-[100] shadow-xl border border-white/10">
+                  <div className="absolute left-full ml-4 top-0 w-64 p-4 bg-foreground text-background text-[10px] leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-[100] shadow-2xl border border-border/10">
                     Ensure to use only those key words which relate to your intended area of interest without adjacent concerns, narrow it by limiting context to minimum relevant.
                   </div>
                 </div>
               </div>
-              <form onSubmit={handleSubmit} className="space-y-4 flex-1">
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 font-mono">Project Title</label>
+              <form onSubmit={handleSubmit} className="space-y-6 flex-1">
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest font-bold opacity-40 font-mono">Project Title</label>
                   <input
                     type="text"
                     value={params.title}
                     onChange={(e) => setParams({ ...params, title: e.target.value })}
                     placeholder="e.g. Smart City Infrastructure"
-                    className="w-full bg-[#F5F5F3] border border-[#141414] p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#141414] transition-all"
+                    className="w-full bg-secondary border border-border p-4 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:opacity-30 text-foreground"
                     disabled={isSearching}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 font-mono">City/State</label>
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest font-bold opacity-40 font-mono">City/State</label>
                   <input
                     type="text"
                     value={params.jurisdiction}
                     onChange={(e) => setParams({ ...params, jurisdiction: e.target.value })}
                     placeholder="e.g. European Union"
-                    className="w-full bg-[#F5F5F3] border border-[#141414] p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#141414] transition-all"
+                    className="w-full bg-secondary border border-border p-4 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:opacity-30 text-foreground"
                     disabled={isSearching}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 font-mono">Application</label>
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest font-bold opacity-40 font-mono">Application</label>
                   <input
                     type="text"
                     value={params.application}
                     onChange={(e) => setParams({ ...params, application: e.target.value })}
                     placeholder="e.g. Autonomous Delivery Drones"
-                    className="w-full bg-[#F5F5F3] border border-[#141414] p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#141414] transition-all"
+                    className="w-full bg-secondary border border-border p-4 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:opacity-30 text-foreground"
                     disabled={isSearching}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 font-mono">Context</label>
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest font-bold opacity-40 font-mono">Context</label>
                   <textarea
                     value={params.context}
                     onChange={(e) => setParams({ ...params, context: e.target.value })}
                     placeholder="e.g. Urban residential areas with high pedestrian density"
-                    className="w-full bg-[#F5F5F3] border border-[#141414] p-3 text-sm min-h-[150px] focus:outline-none focus:ring-1 focus:ring-[#141414] transition-all"
+                    className="w-full bg-secondary border border-border p-4 text-sm min-h-[150px] rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:opacity-30 text-foreground"
                     disabled={isSearching}
                   />
                 </div>
 
                 {error && (
-                  <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-xs flex items-center gap-2">
+                  <div className="p-4 bg-red-50 border border-red-100 text-red-600 text-[10px] uppercase tracking-wider font-mono flex items-center gap-3 rounded-lg">
                     <AlertTriangle className="w-4 h-4" />
                     {error}
                   </div>
@@ -523,7 +547,7 @@ export default function App() {
                   type="submit"
                   disabled={isSearching}
                   className={cn(
-                    "w-full py-4 bg-[#141414] text-[#E4E3E0] font-mono text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-2 hover:bg-[#2a2a2a] active:translate-y-1 active:shadow-none",
+                    "w-full py-5 bg-accent text-background font-mono text-xs uppercase tracking-[0.2em] font-bold rounded-lg transition-all flex items-center justify-center gap-3 hover:opacity-90 active:scale-[0.98]",
                     isSearching && "opacity-50 cursor-not-allowed"
                   )}
                 >
@@ -546,10 +570,16 @@ export default function App() {
         {/* Main Content: Results */}
         <section className="space-y-8 min-h-[80vh]">
           {results.length === 0 && !isSearching && (
-            <div className="h-full flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-[#141414]/20 rounded-lg">
-              <ShieldCheck className="w-12 h-12 opacity-20 mb-4" />
-              <h3 className="font-serif italic text-2xl opacity-40">Safety Argument</h3>
-              <p className="text-sm opacity-40 max-w-md mt-2">Enter project details to generate a comprehensive risk profile and regulatory report.</p>
+            <div className="h-full flex flex-col items-center justify-center text-center p-24 border border-dashed border-border rounded-lg bg-secondary/30 transition-colors duration-300">
+              <div className="w-24 h-24 mb-8 opacity-40">
+                <img 
+                  src={darkMode ? "/Logo_bw.jpg" : "/Logo_wb.jpg"} 
+                  alt="Logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h3 className="font-sans font-bold uppercase tracking-[0.2em] text-2xl opacity-30">Safety Argument</h3>
+              <p className="text-xs opacity-40 max-w-sm mt-4 font-mono leading-relaxed uppercase tracking-wider">Enter project details to generate a basic risk profile and regulatory report.</p>
             </div>
           )}
 
@@ -561,18 +591,18 @@ export default function App() {
                   key={result.step}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white border border-[#141414] shadow-[8px_8px_0px_#141414] overflow-hidden"
+                  className="bg-background border border-border rounded-lg overflow-hidden"
                 >
                   <button 
                     onClick={() => toggleStep(result.step)}
-                    className="w-full bg-[#141414] text-[#E4E3E0] p-4 flex justify-between items-center hover:bg-[#2a2a2a] transition-colors"
+                    className="w-full bg-foreground text-background p-6 flex justify-between items-center hover:opacity-95 transition-all duration-300"
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-xs opacity-50">STEP 0{result.step}</span>
-                      <h3 className="font-mono text-xs uppercase tracking-widest">{STEPS[result.step - 1].name}</h3>
+                    <div className="flex items-center gap-4">
+                      <span className="font-mono text-[10px] font-bold opacity-40">0{result.step}</span>
+                      <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] font-bold">{STEPS[result.step - 1].name}</h3>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+                    <div className="flex items-center gap-4">
+                      <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                       <ChevronRight className={cn("w-4 h-4 transition-transform", isExpanded && "rotate-90")} />
                     </div>
                   </button>
@@ -582,11 +612,11 @@ export default function App() {
                     animate={{ height: isExpanded ? "auto" : "80px" }}
                     className="overflow-hidden relative"
                   >
-                    <div className="p-8">
+                    <div className="p-10">
                       {result.step === 4 && result.groundingMetadata && isExpanded && (
-                        <div className="mb-6 p-4 bg-[#F5F5F3] border-l-4 border-[#141414] space-y-3">
-                          <p className="text-[10px] uppercase tracking-widest font-mono opacity-60">Verified Sources & Bibliography</p>
-                          <div className="flex flex-wrap gap-2">
+                        <div className="mb-8 p-6 bg-secondary border-l-2 border-foreground space-y-4 rounded-r-lg">
+                          <p className="text-[10px] uppercase tracking-[0.2em] font-bold font-mono opacity-40">Verified Sources & Bibliography</p>
+                          <div className="flex flex-wrap gap-3">
                             {result.groundingMetadata.groundingChunks?.map((chunk: any, i: number) => (
                               chunk.web && (
                                 <a 
@@ -594,7 +624,7 @@ export default function App() {
                                   href={chunk.web.uri}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1.5 px-2 py-1 bg-white border border-[#141414]/10 text-[10px] hover:bg-[#141414] hover:text-white transition-colors rounded-sm"
+                                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-background border border-border text-[10px] font-mono uppercase tracking-wider hover:bg-foreground hover:text-background transition-all rounded-lg"
                                 >
                                   <ExternalLink className="w-3 h-3" />
                                   {chunk.web.title || "Source"}
@@ -606,8 +636,8 @@ export default function App() {
                       )}
 
                       <div className={cn(
-                        "prose prose-sm max-w-none prose-headings:font-serif prose-headings:italic prose-headings:font-normal prose-p:leading-relaxed prose-li:leading-relaxed",
-                        !isExpanded && "line-clamp-2 opacity-50"
+                        "prose prose-sm max-w-none prose-headings:font-bold prose-headings:uppercase prose-headings:tracking-widest prose-p:leading-relaxed prose-li:leading-relaxed",
+                        !isExpanded && "line-clamp-2 opacity-30"
                       )}>
                         <ReactMarkdown 
                           remarkPlugins={[remarkGfm]} 
@@ -619,7 +649,7 @@ export default function App() {
                     </div>
                     
                     {!isExpanded && (
-                      <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
                     )}
                   </motion.div>
                 </motion.div>
@@ -631,10 +661,10 @@ export default function App() {
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="p-12 flex flex-col items-center justify-center gap-4 text-[#141414]/40"
+              className="p-16 flex flex-col items-center justify-center gap-6 text-foreground/20"
             >
-              <Loader2 className="w-8 h-8 animate-spin" />
-              <p className="font-mono text-xs uppercase tracking-widest">Synthesizing Step {currentStep}...</p>
+              <Loader2 className="w-10 h-10 animate-spin" />
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] font-bold">Synthesizing Step {currentStep}...</p>
             </motion.div>
           )}
 
@@ -644,21 +674,21 @@ export default function App() {
     </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#141414] p-8 mt-12 bg-white/30">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-[10px] uppercase tracking-widest opacity-50 font-mono">
+      <footer className="border-t border-border p-12 mt-24 bg-secondary/30">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+            <p className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-30 font-mono">
               © 2026 Safety Argument
             </p>
-            <div className="flex gap-6">
-              <a href="https://blog.safetyassurance.au" target="_blank" rel="noopener noreferrer" className="text-[10px] uppercase tracking-widest opacity-50 hover:opacity-100 transition-opacity font-mono">Blog</a>
-              <a href="https://www.safetyargument.com.au" target="_blank" rel="noopener noreferrer" className="text-[10px] uppercase tracking-widest opacity-50 hover:opacity-100 transition-opacity font-mono">Website</a>
+            <div className="flex gap-8">
+              <a href="https://blog.safetyassurance.au" target="_blank" rel="noopener noreferrer" className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-30 hover:opacity-100 transition-opacity font-mono">Blog</a>
+              <a href="https://www.safetyargument.com.au" target="_blank" rel="noopener noreferrer" className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-30 hover:opacity-100 transition-opacity font-mono">Website</a>
             </div>
           </div>
           
-          <div className="pt-6 border-t border-[#141414]/10">
-            <p className="text-[9px] leading-relaxed opacity-40 font-sans max-w-4xl">
-              <span className="font-bold uppercase">Disclaimer:</span> This tool is provided by Safety Argument for basic research and guidance purposes only. The information generated is powered by artificial intelligence and may contain inaccuracies or omissions. Safety Argument does not guarantee regulatory compliance or technical accuracy of the results. Users are strictly advised to consult with qualified safety professionals and legal experts before implementing any findings. Safety Argument assumes no liability for damages, losses, or legal consequences arising from the use of this tool or reliance on its generated reports.
+          <div className="pt-8 border-t border-border/50">
+            <p className="text-[9px] leading-loose opacity-30 font-sans max-w-5xl uppercase tracking-wider">
+              <span className="font-extrabold">Disclaimer:</span> This tool is provided by Safety Argument for basic research and guidance purposes only. The information generated is powered by artificial intelligence and may contain inaccuracies or omissions. Safety Argument does not guarantee regulatory compliance or technical accuracy of the results. Users are strictly advised to consult with qualified safety professionals and legal experts before implementing any findings. Safety Argument assumes no liability for damages, losses, or legal consequences arising from the use of this tool or reliance on its generated reports.
             </p>
           </div>
         </div>
