@@ -1,0 +1,5 @@
+{
+  "name": "Basic Research Risk Profiler",
+  "description": "A basic research tool that analyzes regulatory standards, identifies hazards, and generates comprehensive risk profiles.",
+  "requestFramePermissions": []
+}
