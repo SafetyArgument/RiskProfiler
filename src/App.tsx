@@ -579,7 +579,13 @@ export default function App() {
                 />
               </div>
               <h3 className="font-sans font-bold uppercase tracking-[0.2em] text-2xl opacity-30">Safety Argument</h3>
-              <p className="text-xs opacity-40 max-w-sm mt-4 font-mono leading-relaxed uppercase tracking-wider">Our tool serves as a "first-pass" safety consultant, ensuring that user has not missed critical hazards or obscure regulations, which would be otherwise available to a reasonable person researching relevant open sources.<br>It’s built to provoke thought, provide structure, and offer a foundation for more detailed safety research.<br> It is built on the principle that historic body of knowledge concerning risks and ways to mitigate them is codified in multi-tiered standards or practice and regulations of intended jurisdiction. Your support in any form is much appreciated to keep paying for the tokens. If you like it - support us!</p>
+              <p className="text-[10px] opacity-40 max-w-2xl mx-auto mt-12 font-mono leading-loose uppercase tracking-[0.12em] text-justify">
+                Our tool serves as a "first-pass" safety consultant, ensuring that user has not missed critical hazards or obscure regulations, which would be otherwise available to a reasonable person researching relevant open sources.
+                <br /><br />
+                It’s built to provoke thought, provide structure, and offer a foundation for more detailed safety research.
+                <br /><br />
+                It is built on the principle that historic body of knowledge concerning risks and ways to mitigate them is codified in multi-tiered standards or practice and regulations of intended jurisdiction. Your support in any form is much appreciated to keep paying for the tokens. If you like it - support us!
+              </p>
             </div>
           )}
 
