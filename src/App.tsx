@@ -40,6 +40,7 @@ export default function App() {
     jurisdiction: "",
     application: "",
     context: "",
+    userApiKey: "",
   });
 
   useEffect(() => {
@@ -85,6 +86,13 @@ export default function App() {
     e.preventDefault();
     if (!params.title || !params.jurisdiction || !params.application || !params.context) {
       setError("Please fill in all fields.");
+      return;
+    }
+
+    const hasBuiltInKey = typeof process.env !== "undefined" && !!process.env.GEMINI_API_KEY;
+    const hasUserKey = !!params.userApiKey?.trim();
+    if (!hasBuiltInKey && !hasUserKey) {
+      setError("A Google Gemini API key is required on public deployments. Please obtain a free key from Google AI Studio and enter it below.");
       return;
     }
 
@@ -534,6 +542,32 @@ export default function App() {
                     className="w-full bg-secondary border border-border p-4 text-sm min-h-[150px] rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all text-foreground resize-none"
                     disabled={isSearching}
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-[10px] uppercase tracking-widest font-bold opacity-40 font-mono">Google Gemini API Key</label>
+                    <a 
+                      href="https://aistudio.google.com/" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-[9px] font-mono uppercase tracking-[0.1em] hover:underline opacity-40 hover:opacity-100 flex items-center gap-1 transition-opacity"
+                    >
+                      get free key <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  </div>
+                  <input
+                    type="password"
+                    value={params.userApiKey}
+                    onChange={(e) => setParams({ ...params, userApiKey: e.target.value })}
+                    placeholder={typeof process.env !== "undefined" && process.env.GEMINI_API_KEY ? "Using built-in key (optional)" : "Enter Gemini API Key (starts with AIza...)"}
+                    className="w-full bg-secondary border border-border p-4 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-foreground transition-all text-foreground placeholder:opacity-30"
+                    disabled={isSearching}
+                  />
+                  <p className="text-[9px] opacity-30 font-mono uppercase tracking-wider leading-relaxed">
+                    {typeof process.env !== "undefined" && process.env.GEMINI_API_KEY ? "Optional in Studio sandbox. " : "Required on public deployments. "}
+                    Your key is run purely client-side and never stored on any server.
+                  </p>
                 </div>
 
                 {error && (
