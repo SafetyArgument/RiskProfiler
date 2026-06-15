@@ -1,9 +1,9 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
-const getApiKey = () => {
-  const key = process.env.GEMINI_API_KEY;
+const getApiKey = (userKey?: string) => {
+  const key = userKey?.trim() || process.env.GEMINI_API_KEY;
   if (!key) {
-    throw new Error("GEMINI_API_KEY is not set. Please configure it in your environment or GitHub Secrets.");
+    throw new Error("Gemini API Key is not set. Since you are using a public deployment, please obtain your own Google Gemini API key and enter it below.");
   }
   return key;
 };
@@ -13,6 +13,7 @@ export interface ResearchParams {
   jurisdiction: string;
   application: string;
   context: string;
+  userApiKey?: string;
 }
 
 export interface StepResult {
@@ -26,7 +27,7 @@ export async function runBasicResearch(
   params: ResearchParams,
   onStepComplete: (result: StepResult) => void
 ) {
-  const apiKey = getApiKey();
+  const apiKey = getApiKey(params.userApiKey);
   const genAI = new GoogleGenAI({ apiKey });
   const { title, jurisdiction, application, context } = params;
 
